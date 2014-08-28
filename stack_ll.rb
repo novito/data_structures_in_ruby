@@ -5,6 +5,10 @@ class StackLinkedList
     @head = nil
   end
 
+  def is_empty?
+    @head.nil? ? true : false
+  end
+
   def push(value)
     new_node = Node.new(value)
     new_node.next = @head
@@ -24,9 +28,9 @@ class StackLinkedList
     return @head.data
   end
 
-  private
+end
 
-  class Node
+class Node
     attr_accessor :next
     attr_accessor :data
 
@@ -35,11 +39,46 @@ class StackLinkedList
       @next = nil
     end
   end
+
+class StackWithMin < StackLinkedList
+  def initialize
+    @min_controller = StackLinkedList.new
+    super()
+  end
+
+  def push(value)
+    new_node = Node.new(value)
+
+    if value <= min
+      @min_controller.push(value)
+    end
+
+    super(value)
+  end
+
+  def pop
+    value = super.pop
+    if (value == min)
+      @min_controller.pop
+    end
+
+    return value
+  end
+
+  def min
+    if is_empty?
+      return Float::INFINITY
+    else
+      return @min_controller.peek
+    end
+  end
 end
 
-ll = StackLinkedList.new
-ll.push(3)
-ll.push(4)
-p ll.pop
-ll.push(5)
-puts ll.peek
+min_stack = StackWithMin.new
+
+min_stack.push(3)
+min_stack.push(10)
+min_stack.push(5)
+puts min_stack.min
+
+
